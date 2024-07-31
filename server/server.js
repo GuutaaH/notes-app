@@ -8,11 +8,7 @@ const cors = require('cors')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
-const corsOptions = {
-    origin: 'https://notes-app-client-533ay.kinsta.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-};
+
 
 
 app.use(cors())

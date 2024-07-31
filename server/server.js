@@ -8,23 +8,34 @@ const cors = require('cors')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
+const corsOptions = {
+    origin: 'https://notes-app-client-533ay.kinsta.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
 app.use(cors())
 app.use(express.json())
 
-app.get('/todos/:userEmail', async (req,res) => {
-
-    const {userEmail} = req.params
-    console.log(userEmail)
+app.get('/todos/:userEmail', async (req, res) => {
+    const { userEmail } = req.params;
+    console.log(userEmail);
     
-    try{
-const todos = await pool.query('SELECT * FROM todos WHERE user_email = $1', [userEmail])
-res.json(todos.rows)
+    if (!userEmail) {
+        return res.status(400).json({ error: 'User email is required.' });
     }
-    catch (err){
-        console.log(err)
 
+    try {
+        const todos = await pool.query('SELECT * FROM todos WHERE user_email = $1', [userEmail]);
+        res.json(todos.rows);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-})
+});
 // create a new todo
 app.post('/todos', async(req,res) =>{
     try{
